@@ -114,7 +114,12 @@ if __name__ == "__main__":
     print("\n3. Весовые коэффициенты смеси компонентов подсовокупности:")
     for label, weight in zip(metrics["unique_labels"], metrics["weights"]):
         print(f"   Кластер {label}: {weight:.4f}")
-
+    # Пример использования функции gaussian_pdf
+    print("\nВычисление гауссовой плотности:")
+    x = np.array([0.5, 0.5, 0.5, 0.5, 0.5])  # Пример точки (должна иметь ту же размерность, что и данные)
+    for label, mean, cov in zip(metrics["unique_labels"], metrics["mean_values_per_cluster"], metrics["covariance_matrices"]):
+        pdf_value = gaussian_pdf(x, mean, cov)
+        print(f"   Гауссова плотность для кластера {label} в точке {x}: {pdf_value:.6f}")
     # Пример использования функции weighted_gaussian_mixture_pdf
     print("\nВычисление взвешенной суммы гауссовых плотностей:")
     x = np.array([0.5, 0.5, 0.5, 0.5, 0.5])  # Пример точки (должна иметь ту же размерность, что и данные)
