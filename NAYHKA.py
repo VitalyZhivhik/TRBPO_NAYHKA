@@ -66,8 +66,26 @@ def gaussian_pdf(x, mean, cov):
     normalization = 1 / ((2 * np.pi) ** (d / 2) * np.sqrt(det_cov))
     return normalization * np.exp(exponent)
 
+def weighted_gaussian_mixture_pdf(x, means, covariances, weights):
+    """
+    Вычисляет взвешенную сумму гауссовых плотностей распределения вероятностей.
+    
+    Параметры:
+        x (numpy.ndarray): Точка, в которой вычисляется плотность (вектор).
+        means (list of numpy.ndarray): Список векторов средних значений для каждого кластера.
+        covariances (list of numpy.ndarray): Список ковариационных матриц для каждого кластера.
+        weights (list of float): Список весовых коэффициентов для каждого кластера.
+    
+    Возвращает:
+        float: Значение взвешенной суммы гауссовых плотностей.
+    """
+    pdf_value = 0.0
+    for mean, cov, weight in zip(means, covariances, weights):
+        pdf_value += weight * gaussian_pdf(x, mean, cov)
+    return pdf_value
+
 if __name__ == "__main__":
-    file_path = r"large_data.txt"  # Замените на путь к вашему файлу
+    file_path = r"C:\Users\Vitalik\Desktop\TRBPO_NAYHKA\large_data.txt"  # Замените на путь к вашему файлу
     try:
         data = read_data_from_file(file_path)
     except Exception as e:
@@ -97,9 +115,13 @@ if __name__ == "__main__":
     for label, weight in zip(metrics["unique_labels"], metrics["weights"]):
         print(f"   Кластер {label}: {weight:.4f}")
 
-    # Пример использования функции gaussian_pdf
-    print("\nВычисление гауссовой плотности:")
+    # Пример использования функции weighted_gaussian_mixture_pdf
+    print("\nВычисление взвешенной суммы гауссовых плотностей:")
     x = np.array([0.5, 0.5, 0.5, 0.5, 0.5])  # Пример точки (должна иметь ту же размерность, что и данные)
-    for label, mean, cov in zip(metrics["unique_labels"], metrics["mean_values_per_cluster"], metrics["covariance_matrices"]):
-        pdf_value = gaussian_pdf(x, mean, cov)
-        print(f"   Гауссова плотность для кластера {label} в точке {x}: {pdf_value:.6f}")
+    mixture_pdf_value = weighted_gaussian_mixture_pdf(
+        x,
+        metrics["mean_values_per_cluster"],
+        metrics["covariance_matrices"],
+        metrics["weights"]
+    )
+    print(f"   Взвешенная сумма гауссовых плотностей для точки {x}: {mixture_pdf_value:.6f}")
