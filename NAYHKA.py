@@ -85,7 +85,7 @@ def weighted_gaussian_mixture_pdf(x, means, covariances, weights):
     return pdf_value
 
 if __name__ == "__main__":
-    file_path = r"C:\Users\Vitalik\Desktop\TRBPO_NAYHKA\large_data.txt"  # Замените на путь к вашему файлу
+    file_path = r"large_data.txt"  # Замените на путь к вашему файлу
     try:
         data = read_data_from_file(file_path)
     except Exception as e:
