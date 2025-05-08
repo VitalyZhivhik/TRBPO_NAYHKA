@@ -157,7 +157,7 @@ def compute_ckx(means_list, covariances_list, weights_list, pn_list, x):
         x (np.ndarray): Точка данных, для которой вычисляется C^K(X).
     
     Возвращает:
-        float: Значение C^K(X).
+        list: Значения C^K(X) для каждого класса.
     """
     # Шаг 1: Вычисление числителя для каждого класса
     numerator = []
@@ -174,12 +174,14 @@ def compute_ckx(means_list, covariances_list, weights_list, pn_list, x):
     print("Знаменатель:", denominator)
     
     # Шаг 3: Вычисление C^K(X)
-    ckx = [num / denominator for num in numerator]
+    if denominator == 0:
+        raise ValueError("Знаменатель равен нулю. Возможно, данные некорректны.")
     
+    ckx = [num / denominator for num in numerator]
     return ckx
 
 if __name__ == "__main__":
-    file_path = r"large_data.txt"  # Замените на путь к вашему файлу
+    file_path = r"large_data_2.txt"  # Замените на путь к вашему файлу
     try:
         data = read_data_from_file(file_path)
     except Exception as e:
@@ -260,29 +262,29 @@ print("\nЗначения C^K(X) для каждого класса:")
 for j, value in enumerate(ckx):
     print(f"   Класс {j + 1}: {value:.6f}")
 
-# Параметры классов
-means = [np.array([0, 0]), np.array([5, 5])]
-covariances = [np.eye(2), np.eye(2)]
+# # Параметры классов
+# means = [np.array([0, 0]), np.array([5, 5])]
+# covariances = [np.eye(2), np.eye(2)]
 
-# Создаем сетку точек
-x, y = np.mgrid[-5:10:.01, -5:10:.01]
-pos = np.dstack((x, y))
+# # Создаем сетку точек
+# x, y = np.mgrid[-5:10:.01, -5:10:.01]
+# pos = np.dstack((x, y))
 
-# Вычисляем плотности вероятностей
-rv1 = multivariate_normal(means[0], covariances[0])
-rv2 = multivariate_normal(means[1], covariances[1])
+# # Вычисляем плотности вероятностей
+# rv1 = multivariate_normal(means[0], covariances[0])
+# rv2 = multivariate_normal(means[1], covariances[1])
 
-# Строим графики
-plt.figure(figsize=(8, 6))
-plt.contour(x, y, rv1.pdf(pos), cmap='Blues', alpha=0.7)
-plt.contour(x, y, rv2.pdf(pos), cmap='Reds', alpha=0.7)
+# # Строим графики
+# plt.figure(figsize=(8, 6))
+# plt.contour(x, y, rv1.pdf(pos), cmap='Blues', alpha=0.7)
+# plt.contour(x, y, rv2.pdf(pos), cmap='Reds', alpha=0.7)
 
-# Отмечаем точку X
-x_point = np.array([2.5, 2.5])
-plt.scatter(x_point[0], x_point[1], color='black', label='Точка X')
+# # Отмечаем точку X
+# x_point = np.array([2.5, 2.5])
+# plt.scatter(x_point[0], x_point[1], color='black', label='Точка X')
 
-plt.legend()
-plt.title("Плотности вероятностей для двух классов")
-plt.xlabel("X1")
-plt.ylabel("X2")
-plt.show()
+# plt.legend()
+# plt.title("Плотности вероятностей для двух классов")
+# plt.xlabel("X1")
+# plt.ylabel("X2")
+# plt.show()
